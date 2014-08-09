@@ -362,9 +362,10 @@ function SerialPortFactory() {
 
     try {
       factory.SerialPortBinding.close(fd, function (err) {
+        console.log('Disconnect completed' + (err ? ' with error' : ''), err);
       });
     } catch (e) {
-      //handle silently as we are just cleaning up the OS.
+      console.log('Disconnect failed with exception', e);
     }
 
     self.removeAllListeners();
