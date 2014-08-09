@@ -126,7 +126,7 @@ void EIO_Open(uv_work_t* req) {
   }
 
 
-  int flags = (O_RDWR | O_NOCTTY | O_NONBLOCK | O_NDELAY);
+  int flags = (O_RDWR | O_NOCTTY | O_NONBLOCK);
   int fd = open(data->path, flags);
 
   if (fd == -1) {
