@@ -1,6 +1,6 @@
 {
   "name": "serialport",
-  "version": "1.4.5",
+  "version": "1.4.6-Coaster",
   "description": "Welcome your robotic javascript overlords. Better yet, program them!",
   "author": {
     "name": "Chris Williams",
@@ -17,7 +17,7 @@
   "main": "./serialport",
   "repository": {
     "type": "git",
-    "url": "git://github.com/voodootikigod/node-serialport.git"
+    "url": "git://github.com/J909/node-serialport.git"
   },
   "maintainers": [
     {
