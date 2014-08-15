@@ -411,6 +411,13 @@ function SerialPortFactory() {
     }
 
     self.closing = true;
+
+    // Stop polling before closing the port.
+    if (process.platform !== 'win32') {
+      self.readable = false;
+      self.serialPoller.close();
+    }
+    
     try {
       factory.SerialPortBinding.close(fd, function (err) {
 
@@ -428,11 +435,6 @@ function SerialPortFactory() {
         self.removeAllListeners();
         self.closing = false;
         self.fd = 0;
-
-        if (process.platform !== 'win32') {
-          self.readable = false;
-          self.serialPoller.close();
-        }
 
         if (callback) {
           callback();
