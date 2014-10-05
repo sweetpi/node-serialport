@@ -11,7 +11,7 @@ class SerialportPoller : public node::ObjectWrap {
  public:
   static void Init(v8::Handle<v8::Object> target);
 
-  void callCallback();
+  void callCallback(int status);
 
   void _start();
   void _stop();

@@ -196,7 +196,13 @@ function SerialPortFactory() {
       }
       if (process.platform !== 'win32') {
         self.paused = false;
-        self.serialPoller = new factory.SerialPortBinding.SerialportPoller(self.fd, function () { self._read(); });
+        self.serialPoller = new factory.SerialPortBinding.SerialportPoller(self.fd, function (err) {
+          if(!err) {
+            self._read(); 
+          } else {
+            self.disconnected();
+          }
+        });
         self.serialPoller.start();
       }
 
@@ -263,7 +269,7 @@ function SerialPortFactory() {
       function afterRead(err, bytesRead, readPool, bytesRequested) {
         self.reading = false;
         if (err) {
-
+          console.log("afterRead", err.code);
           if (err.code && err.code === 'EAGAIN') {
             if (self.fd >= 0) {
               self.serialPoller.start();

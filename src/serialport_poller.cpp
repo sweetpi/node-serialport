@@ -17,19 +17,27 @@ SerialportPoller::~SerialportPoller() {
 
 void _serialportReadable(uv_poll_t *req, int status, int events) {
   SerialportPoller* obj = (SerialportPoller*) req->data;
-
   // We can stop polling until we have read all of the data...
   obj->_stop();
-
-  obj->callCallback();
+  obj->callCallback(status);
 }
 
-void SerialportPoller::callCallback() {
+void SerialportPoller::callCallback(int status) {
   // uv_work_t* req = new uv_work_t;
 
   // Call the callback to go read more data...
-  callback_->Call(0, NULL); //2, argv
+
+  v8::Handle<v8::Value> argv[1];
+  if(status != 0) {
+    argv[0] = v8::Exception::Error(NanNew<v8::String>("polling error"));
+  } else {
+    argv[0] = NanUndefined();
+  }
+
+  callback_->Call(1, argv);
 }
+
+
 
 void SerialportPoller::Init(Handle<Object> target) {
   NanScope();
