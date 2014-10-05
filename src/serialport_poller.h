@@ -6,6 +6,7 @@
 #define SERIALPORT_POLLER_H
 
 #include <nan.h>
+#include "serialport.h"
 
 class SerialportPoller : public node::ObjectWrap {
  public:
@@ -26,6 +27,7 @@ class SerialportPoller : public node::ObjectWrap {
   
   uv_poll_t poll_handle_;
   int fd_;
+  char errorString[ERROR_STRING_SIZE];
 
   NanCallback* callback_;
 };

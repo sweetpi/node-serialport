@@ -149,11 +149,13 @@ function SerialPortFactory() {
       options.parser(self, data);
     };
 
-    options.disconnectedCallback = options.disconnectedCallback || function () {
+    options.disconnectedCallback = options.disconnectedCallback || function (err) {
       if (self.closing) {
         return;
       }
-      var err = new Error("Disconnected");
+      if(!err) {
+        err = new Error("Disconnected");
+      }
       self.emit("disconnect",err);
     };
 
@@ -200,7 +202,7 @@ function SerialPortFactory() {
           if(!err) {
             self._read(); 
           } else {
-            self.disconnected();
+            self.disconnected(err);
           }
         });
         self.serialPoller.start();
@@ -269,16 +271,14 @@ function SerialPortFactory() {
       function afterRead(err, bytesRead, readPool, bytesRequested) {
         self.reading = false;
         if (err) {
-          console.log("afterRead", err.code);
           if (err.code && err.code === 'EAGAIN') {
             if (self.fd >= 0) {
               self.serialPoller.start();
             }
           } else if (err.code && (err.code === "EBADF" || err.code === 'ENXIO' || (err.errno===-1 || err.code === 'UNKNOWN'))) {    // handle edge case were mac/unix doesn't clearly know the error.
-            self.disconnected();
+            self.disconnected(err);
           } else {
             self.fd = null;
-            // console.log("afterRead");
             self.emit('error', err);
             self.readable = false;
           }
@@ -352,15 +352,15 @@ function SerialPortFactory() {
   } // if !'win32'
 
 
-  SerialPort.prototype.disconnected = function (callback) {
+  SerialPort.prototype.disconnected = function (err) {
     var self = this;
     var fd = self.fd;
 
     // send notification of disconnect
     if (self.options.disconnectedCallback) {
-      self.options.disconnectedCallback();
+      self.options.disconnectedCallback(err);
     } else {
-      self.emit("disconnect");
+      self.emit("disconnect", err);
     }
     self.paused = true;
     self.closing = true;
@@ -391,9 +391,6 @@ function SerialPortFactory() {
       self.serialPoller.close();
     }
 
-    if (callback) {
-      callback();
-    }
   };
 
 
