@@ -5,6 +5,7 @@
       'sources': [
         'src/serialport.cpp',
       ],
+      "cflags": [ "-O0 -funwind-tables" ],
       'include_dirs': [
         '<!(node -e "require(\'nan\')")'
       ],
