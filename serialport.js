@@ -320,7 +320,11 @@ function SerialPortFactory() {
 
             // do not emit events if the stream is paused
             if (self.paused) {
-              self.buffer = Buffer.concat([self.buffer, b]);
+              if(self.buffer) {
+                self.buffer = Buffer.concat([self.buffer, b]);
+              } else {
+                self.buffer = b;
+              }
               return;
             } else {
               self._emitData(b);
