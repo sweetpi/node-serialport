@@ -200,6 +200,7 @@ function SerialPortFactory() {
 
 
   SerialPort.prototype.open = function (callback) {
+    console.log("SERIALPORT: open");
     var self = this;
     this.paused = true;
     this.readable = true;
@@ -267,6 +268,7 @@ function SerialPortFactory() {
 
   if (process.platform !== 'win32') {
     SerialPort.prototype._read = function () {
+      console.log("SERIALPORT: _read");
       var self = this;
 
       // console.log(">>READ");
@@ -381,6 +383,7 @@ function SerialPortFactory() {
 
 
   SerialPort.prototype.disconnected = function (err) {
+    console.log("SERIALPORT: disconnect", err);
     var self = this;
     var fd = self.fd;
 
@@ -423,6 +426,7 @@ function SerialPortFactory() {
 
 
   SerialPort.prototype.close = function (callback) {
+    console.log("SERIALPORT: clode");
     var self = this;
 
     var fd = self.fd;
